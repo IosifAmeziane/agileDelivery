@@ -1,0 +1,16 @@
+package sda.projectManagementTool.projectManagement.service;
+
+import sda.projectManagementTool.projectManagement.repository.model.AgileStory;
+import sda.projectManagementTool.projectManagement.repository.model.AgileStoryStatus;
+
+import java.util.List;
+
+public interface AgileStoryService {
+
+    AgileStory save(AgileStory agileStory);
+    void delete(Long id);
+    AgileStory findById(Long id);
+    AgileStory assignStoryToUser(AgileStory agileStory, String username);
+    AgileStory updateStatus(Long id, AgileStoryStatus newStatus);
+    List<AgileStory> findByNameContains(String s);
+}

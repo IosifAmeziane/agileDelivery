@@ -6,14 +6,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HelloWorldController {
 
-    @GetMapping(path = "/hello-world-for-project-manager")
+    @GetMapping(path = "/hello-dev")
     public String getHelloWorld() {
-        return "Hello World for project manager";
+        return "Hello World Developer";
     }
 
-    @GetMapping(path = "/hello-world-for-dev")
-    public String getHelloWorldForDev() {
-        return "Hello World for developer";
+    @GetMapping(path = "/hello-pm")
+    public String getHelloWorldProjectManager() {
+        return "Hello World Project Manager";
     }
-
 }

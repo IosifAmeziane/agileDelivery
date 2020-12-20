@@ -29,22 +29,22 @@ public class SdaUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         User user = userService.findByUsername(s);
         if (user != null) {
-            return buildUserForAuthentication(user, getUserAuthority(user.getRoles()));
+            return createUserDetailFromUserForAuthentication(user, mapUserRolesToGrantedAuthorities(user.getRoles()));
         } else {
             throw new UserNotFoundException(String.format("User with username %s was not found", s));
         }
     }
 
-    private List<GrantedAuthority> getUserAuthority(Set<Role> userRoles) {
-        Set<GrantedAuthority> roles = new HashSet<GrantedAuthority>();
-        for (Role role : userRoles) {
-            roles.add(new SimpleGrantedAuthority(role.getRole()));
+    private List<GrantedAuthority> mapUserRolesToGrantedAuthorities(Set<Role> roleSet) {
+        Set<GrantedAuthority> authoritySet = new HashSet<GrantedAuthority>();
+        for (Role role : roleSet) {
+            authoritySet.add(new SimpleGrantedAuthority(role.getRole()));
         }
-        return new ArrayList<>(roles);
+        return new ArrayList<>(authoritySet);
     }
 
-    private UserDetails buildUserForAuthentication(User user, List<GrantedAuthority> authorities) {
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
-                true, true, true, true, authorities);
+    private UserDetails createUserDetailFromUserForAuthentication(User user, List<GrantedAuthority> authoriesOfUser) {
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(), user.getPassword(), true, true, true, true,  authoriesOfUser);
     }
 }

@@ -20,14 +20,14 @@ public class UserRepositoryTest {
 
     @Test
     public void testCreateUser() {
-        User user = new User("username", "email@gmail.com", "passowrd", UserType.DEVELOPER);
+        User user = new User("username", "email@gmail.com", "passowrd");
         User db = userRepository.save(user);
         assertNotNull(db.getId());
     }
 
     @Test
     public void testCreateUserExpectToFailWithWronglyFormattedEmail() {
-        User user = new User("username", "email", "passowrd", UserType.DEVELOPER);
+        User user = new User("username", "email", "passowrd");
         Exception exception = assertThrows(Exception.class, () -> {
             userRepository.save(user);
         });
@@ -36,9 +36,9 @@ public class UserRepositoryTest {
 
     @Test
     public void testCreateUserExpectToFailWithDuplicateException() {
-        User user = new User("username", "email@gmail.com", "passowrd", UserType.DEVELOPER);
+        User user = new User("username", "email@gmail.com", "passowrd");
         User db = userRepository.save(user);
-        User user2 = new User("username", "email@gmail.com", "passowrd", UserType.DEVELOPER);
+        User user2 = new User("username", "email@gmail.com", "passowrd");
         Exception exception = assertThrows(Exception.class, () -> {
             userRepository.save(user2);
         });

@@ -1,6 +1,5 @@
 package sda.projectManagementTool.projectManagement.repository.model;
 
-import org.hibernate.annotations.Fetch;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -29,30 +28,31 @@ public class User {
 
     private String password;
 
-    @Enumerated(value = EnumType.STRING)
-    private UserType userType;
-
     private boolean emailConfirmed;
 
     private String confirmationToken;
 
     private boolean enabled;
 
-    @ManyToMany (cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable (name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+
+    // FetchType : EAGER ---> o sa ne aduca obiectele din relate efectiv cand incarcam obiectul de tip User
+    // FetchType : LAZY ---> o sa ne aduca obiectele din relatie cand le chemam noi
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
     public User() {
 
     }
 
-    public User(String username, String email, String password, UserType userType) {
+    public User(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
-        this.userType = userType;
         this.confirmationToken = username;
     }
+
 
     public Long getId() {
         return id;
@@ -84,14 +84,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public UserType getUserType() {
-        return userType;
-    }
-
-    public void setUserType(UserType userType) {
-        this.userType = userType;
     }
 
     public boolean isEmailConfirmed() {

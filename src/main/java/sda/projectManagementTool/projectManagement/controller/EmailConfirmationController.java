@@ -1,10 +1,13 @@
 package sda.projectManagementTool.projectManagement.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import sda.projectManagementTool.projectManagement.repository.model.User;
 import sda.projectManagementTool.projectManagement.service.UserService;
+
+import javax.persistence.GeneratedValue;
 
 @RestController
 public class EmailConfirmationController {

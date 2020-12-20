@@ -3,6 +3,7 @@ package sda.projectManagementTool.projectManagement.service.implementation;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import sda.projectManagementTool.projectManagement.dto.UserDto;
 import sda.projectManagementTool.projectManagement.repository.RoleRepository;
 import sda.projectManagementTool.projectManagement.repository.UserRepository;
 import sda.projectManagementTool.projectManagement.repository.model.Role;
@@ -11,6 +12,7 @@ import sda.projectManagementTool.projectManagement.repository.model.UserType;
 import sda.projectManagementTool.projectManagement.service.EmailService;
 import sda.projectManagementTool.projectManagement.service.UserService;
 import sda.projectManagementTool.projectManagement.service.exception.ConfirmationTokenNotFoundException;
+import sda.projectManagementTool.projectManagement.service.exception.RoleNotFoundException;
 import sda.projectManagementTool.projectManagement.service.exception.UserAlreadyPresentException;
 import sda.projectManagementTool.projectManagement.service.exception.UserNotFoundException;
 
@@ -44,18 +46,10 @@ public class UserServiceImplementation implements UserService {
             throw new UserAlreadyPresentException("1002");
         }
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        setUserRole(user);
         User db =  userRepository.save(user);
         String message = String.format("Hello %s, confirm your email at http://localhost:8081/confirm/%s", db.getUsername(), db.getConfirmationToken());
         emailService.sendEmail(db.getEmail(), message);
         return db;
-    }
-
-    private void setUserRole(User user) {
-        Role userRole = roleRepository.findByRole(user.getUserType().name());
-        Set<Role> userRoles = new HashSet<>();
-        userRoles.add(userRole);
-        user.setRoles(userRoles);
     }
 
     @Override
@@ -111,6 +105,24 @@ public class UserServiceImplementation implements UserService {
             userRepository.delete(user.get());
         } else {
             throw new UserNotFoundException(String.format("User with %d was not found", id));
+        }
+    }
+
+    @Override
+    public User mapUserDtoToUser(UserDto userDto) {
+        User user = new User(userDto.getUsername(), userDto.getEmail(), userDto.getPassword());
+        user.setRoles(setUserRolesBasedOnUserType(userDto.getUserType()));
+        return user;
+    }
+
+    private Set<Role> setUserRolesBasedOnUserType(UserType userType) {
+        Role role = roleRepository.findByRole(userType.name());
+        if (role != null) {
+            Set<Role> userRoles = new HashSet<>();
+            userRoles.add(role);
+            return userRoles;
+        } else {
+            throw new RoleNotFoundException(String.format("Role with name %s was not found in db", userType.name()));
         }
     }
 }

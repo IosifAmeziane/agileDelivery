@@ -1,5 +1,6 @@
 package sda.projectManagementTool.projectManagement.service;
 
+import sda.projectManagementTool.projectManagement.dto.UserDto;
 import sda.projectManagementTool.projectManagement.repository.model.User;
 
 public interface UserService {
@@ -11,4 +12,5 @@ public interface UserService {
     User findByUsername(String username);
     User update(User user);
     void delete(Long id);
+    User mapUserDtoToUser(UserDto userDto);
 }

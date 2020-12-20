@@ -30,7 +30,7 @@ public class UserServiceTest {
 
     @Test
     public void testCreateUser() {
-        User user = new User("usernmae", "email@gmail.com", "password", UserType.DEVELOPER);
+        User user = new User("usernmae", "email@gmail.com", "password");
         when(userRepository.findByEmail(user.getEmail())).thenReturn(null);
         when(userRepository.findByUsername(user.getUsername())).thenReturn(null);
         when(userRepository.save(user)).thenReturn(user);
@@ -40,7 +40,7 @@ public class UserServiceTest {
 
     @Test
     public void testCreateUserExpectUserAlreadyPresentException() {
-        User user = new User("usernmae", "email@gmail.com", "password", UserType.DEVELOPER);
+        User user = new User("usernmae", "email@gmail.com", "password");
 
         when(userRepository.findByEmail(user.getEmail())).thenReturn(user);
         when(userRepository.findByUsername(user.getUsername())).thenReturn(null);
@@ -54,7 +54,7 @@ public class UserServiceTest {
 
     @Test
     public void testFindByIdExpectedAnUserToBeReturned() {
-        User user = new User("usernmae", "email@gmail.com", "password", UserType.DEVELOPER);
+        User user = new User("usernmae", "email@gmail.com", "password");
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         User userFromService = userServiceImplementation.findById(1L);
         assertNotNull(userFromService);
@@ -62,7 +62,7 @@ public class UserServiceTest {
 
     @Test
     public void testFindByIdExpectUserNotFoundException() {
-        User user = new User("usernmae", "email@gmail.com", "password", UserType.DEVELOPER);
+        User user = new User("usernmae", "email@gmail.com", "password");
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         Exception exception = assertThrows(UserNotFoundException.class, () -> {
             userServiceImplementation.findById(2L);
@@ -73,14 +73,14 @@ public class UserServiceTest {
 
     @Test
     public void testDeleteUserByIdExpectSuccess() {
-        User user = new User("usernmae", "email@gmail.com", "password", UserType.DEVELOPER);
+        User user = new User("usernmae", "email@gmail.com", "password");
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         userServiceImplementation.delete(1L);
     }
 
     @Test
     public void testDeleteUserByIdExceptUserNotFoundException() {
-        User user = new User("usernmae", "email@gmail.com", "password", UserType.DEVELOPER);
+        User user = new User("usernmae", "email@gmail.com", "password");
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         Exception exception = assertThrows(UserNotFoundException.class, () -> {
             userServiceImplementation.delete(2L);
@@ -90,3 +90,4 @@ public class UserServiceTest {
     }
 
 }
+

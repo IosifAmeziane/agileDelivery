@@ -1,0 +1,98 @@
+package sda.projectManagementTool.projectManagement.controller;
+
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+import sda.projectManagementTool.projectManagement.dto.AgileStoryDtoRequest;
+import sda.projectManagementTool.projectManagement.dto.AgileStoryDtoResponse;
+import sda.projectManagementTool.projectManagement.dto.MinimumUserInfoDto;
+import sda.projectManagementTool.projectManagement.repository.model.AgileStory;
+import sda.projectManagementTool.projectManagement.repository.model.AgileStoryStatus;
+import sda.projectManagementTool.projectManagement.repository.model.User;
+import sda.projectManagementTool.projectManagement.service.AgileStoryService;
+import sda.projectManagementTool.projectManagement.service.UserService;
+import sda.projectManagementTool.projectManagement.util.MappingUtils;
+
+import java.security.Security;
+import java.util.ArrayList;
+import java.util.List;
+
+@RestController
+public class AgileStoryController {
+
+    private AgileStoryService agileStoryService;
+    private UserService userService;
+
+    public AgileStoryController(AgileStoryService agileStoryService, UserService userService) {
+        this.agileStoryService = agileStoryService;
+        this.userService = userService;
+    }
+
+    @PostMapping(path = "/agile-stories")
+    public AgileStoryDtoResponse save(@RequestBody AgileStoryDtoRequest agileStoryDtoRequest) {
+        AgileStory agileStory = mapAgileStoryDtoRequestToAgileStory(agileStoryDtoRequest);
+        AgileStory savedInDb = agileStoryService.save(agileStory);
+        return mapAgileEntityToAgileDtoResponse(savedInDb);
+    }
+
+    @GetMapping(path = "/agile-stories/{id}")
+    public AgileStory getById(@PathVariable Long id) {
+        return agileStoryService.findById(id);
+    }
+
+
+    @PutMapping(path = "/agile-stories/{id}")
+    public AgileStory assignStoryToUser(@PathVariable Long id, @RequestParam("username") String username) {
+        AgileStory agileStory = agileStoryService.findById(id);
+        return agileStoryService.assignStoryToUser(agileStory, username);
+    }
+
+    @PutMapping(path = "/agile-stories/status/{id}")
+    public AgileStory updateStatus(@PathVariable Long id, @RequestParam("status") AgileStoryStatus status) {
+        return agileStoryService.updateStatus(id, status);
+    }
+
+    @GetMapping(path = "/agile-stories")
+    public List<AgileStoryDtoResponse> findAllByName(@RequestParam("name") String name) {
+        List<AgileStory> agileStories = agileStoryService.findByNameContains(name);
+        List<AgileStoryDtoResponse> responseList = new ArrayList<>();
+        agileStories.forEach(agileStory -> {
+            responseList.add(mapAgileEntityToAgileDtoResponse(agileStory));
+        });
+        return responseList;
+    }
+
+    private AgileStory mapAgileStoryDtoRequestToAgileStory(AgileStoryDtoRequest agileStoryDtoRequest) {
+        AgileStory agileStory = new AgileStory();
+
+        agileStory.setWeight(agileStoryDtoRequest.getWeight());
+        agileStory.setName(agileStoryDtoRequest.getName());
+        agileStory.setDescription(agileStoryDtoRequest.getDescription());
+        agileStory.setStatus(agileStoryDtoRequest.getStatus());
+        agileStory.setStoryPoints(agileStoryDtoRequest.getStoryPoints());
+        if (agileStoryDtoRequest.getUsername() != null) {
+            User user = userService.findByUsername(agileStoryDtoRequest.getUsername());
+            agileStory.setAssignedUser(user);
+        } else {
+            org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User)
+                    SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            User user = userService.findByUsername(principal.getUsername());
+            agileStory.setAssignedUser(user);
+        }
+        return agileStory;
+    }
+
+    private AgileStoryDtoResponse mapAgileEntityToAgileDtoResponse(AgileStory agileStory){
+        AgileStoryDtoResponse agileStoryDtoResponse = new AgileStoryDtoResponse();
+        agileStoryDtoResponse.setName(agileStory.getName());
+        agileStoryDtoResponse.setDescription(agileStory.getDescription());
+        agileStoryDtoResponse.setStatus(agileStory.getStatus());
+        agileStoryDtoResponse.setId(agileStory.getId());
+        agileStoryDtoResponse.setStoryPoints(agileStory.getStoryPoints());
+        agileStoryDtoResponse.setWeight(agileStory.getWeight());
+
+        MinimumUserInfoDto infoDto = MappingUtils.mapUserToUserDetailsProjectDto(agileStory.getAssignedUser());
+        agileStoryDtoResponse.setUserInfo(infoDto);
+        return agileStoryDtoResponse;
+    }
+}
