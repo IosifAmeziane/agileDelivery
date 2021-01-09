@@ -73,4 +73,12 @@ public class Project {
     public void setAssignedUsers(List<User> assignedUsers) {
         this.assignedUsers = assignedUsers;
     }
+
+    @Override
+    public String toString() {
+        return "Project{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

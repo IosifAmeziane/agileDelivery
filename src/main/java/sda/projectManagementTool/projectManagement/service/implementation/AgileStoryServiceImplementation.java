@@ -9,6 +9,7 @@ import sda.projectManagementTool.projectManagement.repository.model.User;
 import sda.projectManagementTool.projectManagement.service.AgileStoryService;
 import sda.projectManagementTool.projectManagement.service.exception.ResourceNotFoundException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,6 +65,13 @@ public class AgileStoryServiceImplementation implements AgileStoryService {
         AgileStory agileStory = findById(id);
         agileStory.setStatus(newStatus);
         return agileStoryRepository.save(agileStory);
+    }
+
+    @Override
+    public List<AgileStory> findByIds(List<Long> ids) {
+        List<AgileStory> agileStories = new ArrayList<>();
+        ids.forEach(id -> agileStories.add(findById(id)));
+        return agileStories;
     }
 
     @Override

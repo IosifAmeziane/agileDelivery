@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -43,7 +44,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/users").permitAll()
                 .antMatchers("/hello-dev").hasAuthority(UserType.DEVELOPER.name()) // Securizam endpointul de hello-dev si-l facem accesibil doar pentru utilizatori cu role de DEVELOPER
-                .antMatchers("/hello-pm").hasAuthority(UserType.PROJECT_MANAGER.name()) // Securizam endpointul de hello-pm si-l facem accesibil doar pentru utilizatori cu role de PROJECT_MANAGER
+                .antMatchers(HttpMethod.POST, "/projects").hasAuthority(UserType.PROJECT_MANAGER.name()) // Securizam endpointul de hello-pm si-l facem accesibil doar pentru utilizatori cu role de PROJECT_MANAGER
+                .antMatchers(HttpMethod.GET, "/projects/assign-users").hasAuthority(UserType.DEVELOPER.name()) // Securizam endpointul de hello-pm si-l facem accesibil doar pentru utilizatori cu role de PROJECT_MANAGER
                 .anyRequest() // precizam ca request-urile anterior configurate trebuie sa fie autorizate (adica trebuie sa avem un user logat)
                 .authenticated()
                 .and()
@@ -52,6 +54,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .csrf()
                 .disable();
     }
+
 
     @Bean
     public PasswordEncoder bCryptPasswordEncoder() {

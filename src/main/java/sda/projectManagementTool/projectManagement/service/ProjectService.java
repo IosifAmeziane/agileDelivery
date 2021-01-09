@@ -1,5 +1,6 @@
 package sda.projectManagementTool.projectManagement.service;
 
+import org.springframework.data.domain.Page;
 import sda.projectManagementTool.projectManagement.dto.ProjectDtoRequest;
 import sda.projectManagementTool.projectManagement.repository.model.Project;
 import sda.projectManagementTool.projectManagement.repository.model.User;
@@ -16,5 +17,6 @@ public interface ProjectService {
     Project assignUserToProject(String username, String projectName);
     List<Project> findAll();
     void sendInviteLinkToUserForProjectAssignment(String username, String projectName);
+    Page<Project> findAllPaginated(int size, int page);
 
 }

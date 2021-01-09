@@ -90,4 +90,12 @@ public class AgileStory {
     public Integer getStoryPoints() {
         return storyPoints;
     }
+
+    @Override
+    public String toString() {
+        return "AgileStory{" +
+                "name='" + name + '\'' +
+                ", status=" + status +
+                '}';
+    }
 }

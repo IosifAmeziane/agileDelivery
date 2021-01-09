@@ -1,5 +1,7 @@
 package sda.projectManagementTool.projectManagement.service.implementation;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import sda.projectManagementTool.projectManagement.dto.ProjectDtoRequest;
@@ -123,7 +125,7 @@ public class ProjectServiceImplementation implements ProjectService {
 
     @Override
     public List<Project> findAll() {
-        return projectRepository.findAll();
+        return (List<Project>) projectRepository.findAll();
     }
 
     @Override
@@ -133,10 +135,17 @@ public class ProjectServiceImplementation implements ProjectService {
             // http://localhost:8081/projects/users?projectName=projectName&username=username;
             emailService
                     .sendEmail(user.getEmail(),
-                               String.format("http://localhost:8081/projects/users?username=%s&projectName=%s",
+                               String.format("You have been invited to the project. Please " +
+                                               "access the link to be assigned. " +
+                                               "http://localhost:8081/projects/users?username=%s&projectName=%s",
                                username, projectName));
 
         }
+    }
+
+    @Override
+    public Page<Project> findAllPaginated(int size, int page) {
+        return projectRepository.findAll(PageRequest.of(page,size));
     }
 
     private boolean isUserAndProjectPresent(String username, String projectName) {

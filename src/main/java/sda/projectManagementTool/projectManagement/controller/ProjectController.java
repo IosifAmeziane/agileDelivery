@@ -1,5 +1,6 @@
 package sda.projectManagementTool.projectManagement.controller;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import sda.projectManagementTool.projectManagement.dto.ProjectDtoRequest;
@@ -67,7 +68,7 @@ public class ProjectController {
         return mapProjectToProjectDtoResponse(project);
     }
 
-    @GetMapping(path = "/projects/assigned-users")
+    @GetMapping(path = "/projects/assign-users")
     public HttpStatus invite(@RequestParam("projectName") String projectName, @RequestParam("username") String username) {
         projectService.sendInviteLinkToUserForProjectAssignment(username, projectName);
         return HttpStatus.OK;
@@ -78,6 +79,11 @@ public class ProjectController {
         project.setDescription(projectDtoRequest.getDescription());
         project.setName(projectDtoRequest.getName());
         return project;
+    }
+
+    @GetMapping(path = "/paginated-projects")
+    public Page<Project> getAllPaginated(@RequestParam("size") int size, @RequestParam ("page") int page) {
+        return projectService.findAllPaginated(size, page);
     }
 
     private ProjectDtoResponse mapProjectToProjectDtoResponse(Project project) {

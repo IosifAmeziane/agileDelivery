@@ -12,5 +12,6 @@ public interface AgileStoryService {
     AgileStory findById(Long id);
     AgileStory assignStoryToUser(AgileStory agileStory, String username);
     AgileStory updateStatus(Long id, AgileStoryStatus newStatus);
+    List<AgileStory> findByIds(List<Long> ids);
     List<AgileStory> findByNameContains(String s);
 }

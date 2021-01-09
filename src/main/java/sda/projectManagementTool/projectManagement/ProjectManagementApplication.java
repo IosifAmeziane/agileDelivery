@@ -25,7 +25,7 @@ public class ProjectManagementApplication implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         Arrays
-                .stream(UserType.values())
+                .stream(UserType.values()) // DEVELOPER, PROJECT_MANAGER;
                 .forEach(userType -> {
                     if (roleRepository.findByRole(userType.name()) == null) {
 						roleRepository.save(new Role(userType.name()));
