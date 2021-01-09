@@ -44,7 +44,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         // Role si Authority sunt sinonime - reprezinta acelasi lucru
         // TODO: adaugare restrictii pentru endpoint-urile noi definite
-        http.antMatcher("/**")
+        http.csrf().disable()
                 .cors()
                 .and()
                 .authorizeRequests()
@@ -52,13 +52,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/users").permitAll()
                 .antMatchers("/users/**").permitAll()
                 .antMatchers("/hello-dev").hasAuthority(UserType.DEVELOPER.name()) // Securizam endpointul de hello-dev si-l facem accesibil doar pentru utilizatori cu role de DEVELOPER
-//                .antMatchers(HttpMethod.POST, "/projects").hasAuthority(UserType.PROJECT_MANAGER.name()) // Securizam endpointul de hello-pm si-l facem accesibil doar pentru utilizatori cu role de PROJECT_MANAGER
-//                .antMatchers(HttpMethod.GET, "/projects/assign-users").hasAuthority(UserType.DEVELOPER.name()) // Securizam endpointul de hello-pm si-l facem accesibil doar pentru utilizatori cu role de PROJECT_MANAGER
                 .anyRequest() // precizam ca request-urile anterior configurate trebuie sa fie autorizate (adica trebuie sa avem un user logat)
                 .authenticated()
                 .and()
-                .csrf()
-                .disable();
+                .httpBasic();
     }
 
     @Bean
