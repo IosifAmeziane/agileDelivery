@@ -75,7 +75,12 @@ public class AgileStoryServiceImplementation implements AgileStoryService {
     }
 
     @Override
-    public List<AgileStory> findByNameContains(String s) {
-        return agileStoryRepository.findByNameContains(s);
+    public List<AgileStory> findByNameContainsAndProjectId(String s, Long projectId) {
+        return agileStoryRepository.findByNameContainsAndProjectIdAndAgileSprintNull(s, projectId);
+    }
+
+    @Override
+    public List<AgileStory> findAll() {
+        return agileStoryRepository.findAll();
     }
 }

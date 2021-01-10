@@ -8,9 +8,12 @@ import sda.projectManagementTool.projectManagement.dto.AgileStoryDtoResponse;
 import sda.projectManagementTool.projectManagement.dto.MinimumUserInfoDto;
 import sda.projectManagementTool.projectManagement.repository.model.AgileStory;
 import sda.projectManagementTool.projectManagement.repository.model.AgileStoryStatus;
+import sda.projectManagementTool.projectManagement.repository.model.Project;
 import sda.projectManagementTool.projectManagement.repository.model.User;
 import sda.projectManagementTool.projectManagement.service.AgileStoryService;
+import sda.projectManagementTool.projectManagement.service.ProjectService;
 import sda.projectManagementTool.projectManagement.service.UserService;
+import sda.projectManagementTool.projectManagement.service.exception.ResourceNotFoundException;
 import sda.projectManagementTool.projectManagement.util.MappingUtils;
 
 import java.security.Security;
@@ -21,11 +24,13 @@ import java.util.List;
 public class AgileStoryController {
 
     private AgileStoryService agileStoryService;
+    private ProjectService projectService;
     private UserService userService;
 
-    public AgileStoryController(AgileStoryService agileStoryService, UserService userService) {
+    public AgileStoryController(AgileStoryService agileStoryService, UserService userService, ProjectService projectService) {
         this.agileStoryService = agileStoryService;
         this.userService = userService;
+        this.projectService = projectService;
     }
 
     @PostMapping(path = "/agile-stories")
@@ -52,9 +57,19 @@ public class AgileStoryController {
         return agileStoryService.updateStatus(id, status);
     }
 
+    @GetMapping(path = "/agile-stories/all")
+    public List<AgileStoryDtoResponse> findAll() {
+        List<AgileStory> agileStories = agileStoryService.findAll();
+
+        List<AgileStoryDtoResponse> responseList = new ArrayList<>();
+        agileStories.forEach(agileStory -> {
+            responseList.add(mapAgileEntityToAgileDtoResponse(agileStory));
+        });
+        return responseList;
+    }
     @GetMapping(path = "/agile-stories")
-    public List<AgileStoryDtoResponse> findAllByName(@RequestParam("name") String name) {
-        List<AgileStory> agileStories = agileStoryService.findByNameContains(name);
+    public List<AgileStoryDtoResponse> findAllByName(@RequestParam("name") String name, @RequestParam("projectId") Long projectId) {
+        List<AgileStory> agileStories = agileStoryService.findByNameContainsAndProjectId(name, projectId);
         List<AgileStoryDtoResponse> responseList = new ArrayList<>();
         agileStories.forEach(agileStory -> {
             responseList.add(mapAgileEntityToAgileDtoResponse(agileStory));
@@ -79,6 +94,14 @@ public class AgileStoryController {
             User user = userService.findByUsername(principal.getUsername());
             agileStory.setAssignedUser(user);
         }
+
+        Project project = projectService.findById(agileStoryDtoRequest.getProjectId());
+        if ( project != null) {
+            agileStory.setProject(project);
+        } else {
+            throw new ResourceNotFoundException(String.format("Project with id %d not found", agileStoryDtoRequest.getProjectId()));
+        }
+
         return agileStory;
     }
 

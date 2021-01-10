@@ -9,6 +9,7 @@ public class AgileStoryDtoRequest {
     private AgileStoryStatus status;
     private String username;
     private int weight;
+    private Long projectId;
 
 
     public Integer getStoryPoints() {
@@ -57,5 +58,13 @@ public class AgileStoryDtoRequest {
 
     public void setWeight(int weight) {
         this.weight = weight;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 }

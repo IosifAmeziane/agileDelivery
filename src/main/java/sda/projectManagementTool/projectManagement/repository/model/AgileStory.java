@@ -31,8 +31,22 @@ public class AgileStory {
     @Max(value = 5, message = "The weight value should be less <= 5")
     private int weight;
 
+    @ManyToOne
+    private Project project;
+
+    @ManyToOne
+    private AgileSprint agileSprint;
+
     public AgileStory() {
 
+    }
+
+    public AgileSprint getAgileSprint() {
+        return agileSprint;
+    }
+
+    public void setAgileSprint(AgileSprint agileSprint) {
+        this.agileSprint = agileSprint;
     }
 
     public Long getId() {
@@ -97,5 +111,13 @@ public class AgileStory {
                 "name='" + name + '\'' +
                 ", status=" + status +
                 '}';
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
     }
 }

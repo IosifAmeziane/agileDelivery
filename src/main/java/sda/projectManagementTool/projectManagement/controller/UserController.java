@@ -28,6 +28,11 @@ public class UserController {
         return userService.findById(id);
     }
 
+    @GetMapping
+    public User findByEmail(@RequestParam("email") String email){
+        return userService.findByEmail(email);
+    }
+
     @GetMapping(path = "/logged-user")
     public HttpStatus getLoggedUser() {
         return HttpStatus.OK;

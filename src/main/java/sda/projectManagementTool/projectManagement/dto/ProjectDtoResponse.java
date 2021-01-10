@@ -8,6 +8,7 @@ public class ProjectDtoResponse {
     private String name;
     private MinimumUserInfoDto administrator;
     private List<MinimumUserInfoDto> assignedUsers;
+    private int sprintNumbers;
 
     public ProjectDtoResponse(Long id, String description, String name,
                               MinimumUserInfoDto administrator,
@@ -57,5 +58,13 @@ public class ProjectDtoResponse {
 
     public void setAssignedUsers(List<MinimumUserInfoDto> assignedUsers) {
         this.assignedUsers = assignedUsers;
+    }
+
+    public int getSprintNumbers() {
+        return sprintNumbers;
+    }
+
+    public void setSprintNumbers(int sprintNumbers) {
+        this.sprintNumbers = sprintNumbers;
     }
 }

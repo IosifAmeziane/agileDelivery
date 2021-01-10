@@ -115,6 +115,11 @@ public class UserServiceImplementation implements UserService {
         return user;
     }
 
+    @Override
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
     private Set<Role> setUserRolesBasedOnUserType(UserType userType) {
         Role role = roleRepository.findByRole(userType.name());
         if (role != null) {

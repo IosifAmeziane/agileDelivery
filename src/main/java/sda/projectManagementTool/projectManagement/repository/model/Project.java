@@ -24,6 +24,17 @@ public class Project {
     @JoinTable(name = "project_users", inverseJoinColumns = @JoinColumn(name = "user_id"), joinColumns = @JoinColumn(name = "project_id"))
     private List<User> assignedUsers = new ArrayList<>();
 
+    @OneToMany (
+            cascade = CascadeType.ALL,
+            mappedBy = "project")
+    private List<AgileStory> agileStoryList;
+
+    @OneToMany(
+            mappedBy = "project",
+            cascade = CascadeType.ALL
+    )
+    private List<AgileSprint> agileSprints;
+
     public Project() {
 
     }
@@ -74,11 +85,27 @@ public class Project {
         this.assignedUsers = assignedUsers;
     }
 
+    public List<AgileStory> getAgileStoryList() {
+        return agileStoryList;
+    }
+
+    public void setAgileStoryList(List<AgileStory> agileStoryList) {
+        this.agileStoryList = agileStoryList;
+    }
+
     @Override
     public String toString() {
         return "Project{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    public List<AgileSprint> getAgileSprints() {
+        return agileSprints;
+    }
+
+    public void setAgileSprints(List<AgileSprint> agileSprints) {
+        this.agileSprints = agileSprints;
     }
 }

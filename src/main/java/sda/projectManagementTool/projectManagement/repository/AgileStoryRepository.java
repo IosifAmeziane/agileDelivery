@@ -9,6 +9,5 @@ import java.util.List;
 @Repository
 public interface AgileStoryRepository extends JpaRepository<AgileStory, Long> {
     //TODO: make this paginated using PagingAndSortingRepository
-    List<AgileStory> findByNameContains(String s);
-
+    List<AgileStory> findByNameContainsAndProjectIdAndAgileSprintNull(String s, Long projectId);
 }

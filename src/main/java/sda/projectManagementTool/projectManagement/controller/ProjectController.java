@@ -50,8 +50,11 @@ public class ProjectController {
     }
 
     @GetMapping(path = "/projects")
-    public List<Project> getAll() {
-        return projectService.findAll();
+    public List<ProjectDtoResponse> getAll() {
+        List<Project> projectList = projectService.findAll();
+        List<ProjectDtoResponse> projectDtoResponses = new ArrayList<>();
+        projectList.forEach(project -> projectDtoResponses.add(mapProjectToProjectDtoResponse(project)));
+        return projectDtoResponses;
     }
 
     @PutMapping(path = "/projects/{id}")
@@ -92,6 +95,8 @@ public class ProjectController {
         project.getAssignedUsers().forEach( user -> {
             assignedUsers.add(MappingUtils.mapUserToUserDetailsProjectDto(user));
         });
-        return new ProjectDtoResponse(project.getId(), project.getDescription(), project.getName(), minimumUserInfoDto, assignedUsers);
+        ProjectDtoResponse response = new ProjectDtoResponse(project.getId(), project.getDescription(), project.getName(), minimumUserInfoDto, assignedUsers);
+        response.setSprintNumbers(project.getAgileSprints().size());
+        return response;
     }
 }

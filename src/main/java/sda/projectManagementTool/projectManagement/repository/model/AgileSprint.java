@@ -19,7 +19,7 @@ public class AgileSprint {
     @DateTimeFormat
     private LocalDate endDate;
 
-    @OneToMany
+    @OneToMany (mappedBy = "agileSprint")
     private List<AgileStory> agileStories;
 
     @ManyToOne

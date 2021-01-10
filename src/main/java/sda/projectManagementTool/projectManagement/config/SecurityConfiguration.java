@@ -51,6 +51,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/users").permitAll()
                 .antMatchers("/users/**").permitAll()
+                .antMatchers("/projects/users").permitAll()
                 .antMatchers("/hello-dev").hasAuthority(UserType.DEVELOPER.name()) // Securizam endpointul de hello-dev si-l facem accesibil doar pentru utilizatori cu role de DEVELOPER
                 .anyRequest() // precizam ca request-urile anterior configurate trebuie sa fie autorizate (adica trebuie sa avem un user logat)
                 .authenticated()
@@ -64,9 +65,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry
-                        .addMapping("/**")
-                        .allowedMethods("*")
-                        .allowedOrigins("http://localhost:4200", "http://localhost:8080");
+                        .addMapping("/**") // inseamna ca regulile de aici se aplica pe toate rutele din aplicatie
+                        .allowedMethods("*") // metodele HTTP, * este placeholder care spune ca accepta orice
+                        .allowedOrigins("http://localhost:4200", "http://localhost:8080"); // originile de unde vin request-urile
             }
         };
     }
