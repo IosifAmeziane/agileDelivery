@@ -67,7 +67,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 registry
                         .addMapping("/**") // inseamna ca regulile de aici se aplica pe toate rutele din aplicatie
                         .allowedMethods("*") // metodele HTTP, * este placeholder care spune ca accepta orice
-                        .allowedOrigins("http://localhost:4200", "http://localhost:8080"); // originile de unde vin request-urile
+                        .allowedOrigins("*"); // originile de unde vin request-urile
             }
         };
     }
