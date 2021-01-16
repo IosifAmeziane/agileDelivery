@@ -16,6 +16,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+
+// serviciul e folosit de spring security
+// pentru a valida ca utilizatorul exista
 @Service
 public class SdaUserDetailsService implements UserDetailsService {
 
@@ -28,7 +31,13 @@ public class SdaUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         User user = userService.findByUsername(s);
+
         if (user != null) {
+//TODO:        To be implemented.
+//        if (!user.isEmailConfirmed()) {
+//            throw new NotAuthorizedException("User has not confirmed his email");
+//        }
+//
             return createUserDetailFromUserForAuthentication(user, mapUserRolesToGrantedAuthorities(user.getRoles()));
         } else {
             throw new UserNotFoundException(String.format("User with username %s was not found", s));

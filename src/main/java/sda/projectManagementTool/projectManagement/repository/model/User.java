@@ -42,6 +42,16 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
+    // --->
+    // /projects, /sprints, /stories
+    // --->
+    // Utilizator : { PROJECT_MANAGER, DEVELOPER,  }
+    //
+    //
+    // .antMatchers("/projects").hasAuthority("PROJECT_MANAGER"),
+    // .antMatchers("/sprints").hasAuthority("DEVELOPER"),
+
+
     public User() {
 
     }

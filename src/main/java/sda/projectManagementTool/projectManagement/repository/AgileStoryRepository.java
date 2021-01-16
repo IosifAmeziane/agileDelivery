@@ -10,4 +10,5 @@ import java.util.List;
 public interface AgileStoryRepository extends JpaRepository<AgileStory, Long> {
     //TODO: make this paginated using PagingAndSortingRepository
     List<AgileStory> findByNameContainsAndProjectIdAndAgileSprintNull(String s, Long projectId);
+    List<AgileStory> findAllByProjectId(Long projectId);
 }

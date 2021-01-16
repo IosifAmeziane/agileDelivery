@@ -15,4 +15,5 @@ public interface AgileStoryService {
     List<AgileStory> findByIds(List<Long> ids);
     List<AgileStory> findByNameContainsAndProjectId(String name, Long projectId);
     List<AgileStory> findAll();
+    List<AgileStory> findAllByProjectId(Long projectId);
 }

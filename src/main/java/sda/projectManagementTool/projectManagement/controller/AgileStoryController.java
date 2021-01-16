@@ -41,20 +41,20 @@ public class AgileStoryController {
     }
 
     @GetMapping(path = "/agile-stories/{id}")
-    public AgileStory getById(@PathVariable Long id) {
-        return agileStoryService.findById(id);
+    public AgileStoryDtoResponse getById(@PathVariable Long id) {
+        return mapAgileEntityToAgileDtoResponse(agileStoryService.findById(id));
     }
 
 
     @PutMapping(path = "/agile-stories/{id}")
-    public AgileStory assignStoryToUser(@PathVariable Long id, @RequestParam("username") String username) {
+    public AgileStoryDtoResponse assignStoryToUser(@PathVariable Long id, @RequestParam("username") String username) {
         AgileStory agileStory = agileStoryService.findById(id);
-        return agileStoryService.assignStoryToUser(agileStory, username);
+        return mapAgileEntityToAgileDtoResponse(agileStoryService.assignStoryToUser(agileStory, username));
     }
 
     @PutMapping(path = "/agile-stories/status/{id}")
-    public AgileStory updateStatus(@PathVariable Long id, @RequestParam("status") AgileStoryStatus status) {
-        return agileStoryService.updateStatus(id, status);
+    public AgileStoryDtoResponse updateStatus(@PathVariable Long id, @RequestParam("status") AgileStoryStatus status) {
+        return mapAgileEntityToAgileDtoResponse(agileStoryService.updateStatus(id, status));
     }
 
     @GetMapping(path = "/agile-stories/all")
@@ -70,6 +70,16 @@ public class AgileStoryController {
     @GetMapping(path = "/agile-stories")
     public List<AgileStoryDtoResponse> findAllByName(@RequestParam("name") String name, @RequestParam("projectId") Long projectId) {
         List<AgileStory> agileStories = agileStoryService.findByNameContainsAndProjectId(name, projectId);
+        List<AgileStoryDtoResponse> responseList = new ArrayList<>();
+        agileStories.forEach(agileStory -> {
+            responseList.add(mapAgileEntityToAgileDtoResponse(agileStory));
+        });
+        return responseList;
+    }
+
+    @GetMapping(path = "/agile-stories/project/{id}")
+    public List<AgileStoryDtoResponse> findAllByProjectId(@PathVariable("id") Long projectId) {
+        List<AgileStory> agileStories = agileStoryService.findAllByProjectId(projectId);
         List<AgileStoryDtoResponse> responseList = new ArrayList<>();
         agileStories.forEach(agileStory -> {
             responseList.add(mapAgileEntityToAgileDtoResponse(agileStory));

@@ -18,6 +18,13 @@ public class EmailConfirmationController {
         this.userService = userService;
     }
 
+    // userRegiter - > se trimite un email cu confrimation token de genul
+    // http://localhost:8081/confirm/{token}
+    // Cand utilizatorul da click pe link-ul de mai sus, se apeleaza metoda
+    // confirmationOfEmail care este prezenta mai jos.
+    //
+    //
+    //
     @GetMapping(path = "/confirm/{confirmationToken}")
     public User confirmationOfEmail(@PathVariable String confirmationToken) {
         return userService.confirmUser(confirmationToken);
