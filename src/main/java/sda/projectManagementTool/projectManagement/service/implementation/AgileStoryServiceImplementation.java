@@ -89,5 +89,10 @@ public class AgileStoryServiceImplementation implements AgileStoryService {
         return agileStoryRepository.findAllByProjectId(projectId);
     }
 
+    @Override
+    public List<AgileStory> findAllBySprintId(Long sprintId) {
+        return agileStoryRepository.findAllByAgileSprint_Id(sprintId);
+    }
+
 
 }

@@ -87,6 +87,15 @@ public class AgileStoryController {
         return responseList;
     }
 
+    @GetMapping(path = "/agile-stories/sprints/{id}")
+    public List<AgileStoryDtoResponse> findAllStoriesBySprint(@PathVariable("id") Long sprintId) {
+        List<AgileStory> agileStories = agileStoryService.findAllBySprintId(sprintId);
+        List<AgileStoryDtoResponse> responseList = new ArrayList<>();
+        agileStories.forEach(agileStory -> {
+            responseList.add(mapAgileEntityToAgileDtoResponse(agileStory));
+        });
+        return responseList;
+    }
     private AgileStory mapAgileStoryDtoRequestToAgileStory(AgileStoryDtoRequest agileStoryDtoRequest) {
         AgileStory agileStory = new AgileStory();
 
