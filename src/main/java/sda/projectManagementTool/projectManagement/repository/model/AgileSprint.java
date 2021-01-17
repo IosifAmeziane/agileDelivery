@@ -55,6 +55,7 @@ public class AgileSprint {
     }
 
     public void setAgileStories(List<AgileStory> agileStories) {
+        agileStories.forEach( el -> el.setAgileSprint(this));
         this.agileStories = agileStories;
     }
 
