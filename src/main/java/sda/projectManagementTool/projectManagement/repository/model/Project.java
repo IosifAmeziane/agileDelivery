@@ -27,13 +27,13 @@ public class Project {
     @OneToMany (
             cascade = CascadeType.ALL,
             mappedBy = "project")
-    private List<AgileStory> agileStoryList;
+    private List<AgileStory> agileStoryList = new ArrayList<>();
 
     @OneToMany(
             mappedBy = "project",
             cascade = CascadeType.ALL
     )
-    private List<AgileSprint> agileSprints;
+    private List<AgileSprint> agileSprints = new ArrayList<>();
 
     public Project() {
 
